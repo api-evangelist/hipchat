@@ -1,0 +1,54 @@
+finops: 0.1
+focusAlignment: 1.0
+provider:
+  id: hipchat
+  name: HipChat (Atlassian)
+  status: sunset
+  sunsetDate: '2019-02-15'
+notice: |
+  HipChat has been discontinued. No billable charges remain. This FinOps record is preserved for
+  archival/migration-pattern reference only. It describes the historical billing model that was in
+  effect when the product was sold (2010-2019).
+billingDimensions:
+- dimension: SeatLicense
+  description: HipChat Cloud Plus billed per active user per month.
+  unit: user-month
+  currency: USD
+  meterType: subscription
+  basisOfMeasure: provisioned-seats
+- dimension: PerpetualLicense
+  description: HipChat Server billed as a one-time tiered perpetual license plus optional annual
+    maintenance renewal.
+  unit: user-license
+  currency: USD
+  meterType: one-time-plus-maintenance
+- dimension: DataCenterSubscription
+  description: HipChat Data Center billed as an annual subscription scaled by user tier.
+  unit: user-year
+  currency: USD
+  meterType: subscription
+costAllocation:
+- tag: team
+  description: Customers typically allocated HipChat costs by team or business unit (one HipChat group
+    per BU).
+- tag: environment
+  description: HipChat Server / Data Center customers allocated infrastructure costs by environment
+    (prod, staging) since the chat service was self-hosted.
+focusFields:
+  ChargeCategory: Usage
+  CommitmentDiscountCategory: Subscription
+  ServiceCategory: Productivity
+  ServiceSubcategory: TeamMessaging
+  PricingCategory: Standard
+  PricingUnit: user/month
+  BillingCurrency: USD
+  ChargeFrequency:
+    cloud: Recurring
+    server: One-time
+    dataCenter: Recurring
+- field: Region
+  notes: Cloud was multi-region (USA & EU residency available on Plus); Server/DC was self-hosted in
+    customer regions.
+referenceUrls:
+- https://www.atlassian.com/migration/move-from-hipchat-to-slack
+- https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-schema/hipchat-message-schema.json",
+  "title": "HipChat Message",
+  "description": "A message posted in a HipChat room or private chat. Historical schema — HipChat was discontinued on 2019-02-15.",
+  "type": "object",
+  "x-status": "sunset",
+  "required": ["id", "message", "date"],
+  "properties": {
+    "id": {"type": "string"},
+    "from": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {"type": "integer"},
+            "mention_name": {"type": "string"},
+            "name": {"type": "string"}
+          }
+        },
+        {
+          "type": "object",
+          "description": "Non-user sender (e.g. add-on / notification).",
+          "properties": {
+            "name": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "message": {"type": "string", "maxLength": 10000},
+    "date": {"type": "string", "format": "date-time"},
+    "type": {
+      "type": "string",
+      "enum": ["message", "notification", "guest_access", "topic"]
+    },
+    "color": {
+      "type": "string",
+      "enum": ["yellow", "green", "red", "purple", "gray", "random"]
+    },
+    "message_format": {"type": "string", "enum": ["html", "text"]},
+    "mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "mention_name": {"type": "string"},
+          "name": {"type": "string"}
+        }
+      }
+    },
+    "file": {
+      "type": ["object", "null"],
+      "properties": {
+        "name": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "size": {"type": "integer"},
+        "thumb_url": {"type": "string", "format": "uri"}
+      }
+    },
+    "card": {
+      "type": ["object", "null"],
+      "description": "HipChat Card rich-message attachment."
+    }
+  }
+}

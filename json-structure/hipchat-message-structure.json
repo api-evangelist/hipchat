@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-structure.org/draft-00",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-structure/hipchat-message-structure.json",
+  "name": "HipChatMessage",
+  "type": "object",
+  "description": "JSON Structure for a HipChat Message. Historical surface; HipChat was discontinued 2019-02-15.",
+  "x-status": "sunset",
+  "properties": {
+    "id": {"type": "string", "required": true},
+    "from": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "int64"},
+        "mention_name": {"type": "string"},
+        "name": {"type": "string"}
+      }
+    },
+    "message": {"type": "string", "required": true, "maxLength": 10000},
+    "date": {"type": "string", "format": "date-time", "required": true},
+    "type": {"type": "string", "enum": ["message", "notification", "guest_access", "topic"]},
+    "color": {"type": "string", "enum": ["yellow", "green", "red", "purple", "gray", "random"]},
+    "message_format": {"type": "string", "enum": ["html", "text"]},
+    "mentions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "int64"},
+          "mention_name": {"type": "string"},
+          "name": {"type": "string"}
+        }
+      }
+    }
+  }
+}

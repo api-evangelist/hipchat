@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-schema/hipchat-user-schema.json",
+  "title": "HipChat User",
+  "description": "A HipChat user account. Historical schema — HipChat was discontinued on 2019-02-15.",
+  "type": "object",
+  "x-status": "sunset",
+  "required": ["id", "mention_name", "name"],
+  "properties": {
+    "id": {"type": "integer"},
+    "mention_name": {"type": "string", "description": "@mention name for the user."},
+    "name": {"type": "string"},
+    "email": {"type": "string", "format": "email"},
+    "title": {"type": "string"},
+    "timezone": {"type": "string"},
+    "is_group_admin": {"type": "boolean"},
+    "is_guest": {"type": "boolean"},
+    "is_deleted": {"type": "boolean"},
+    "created": {"type": "string", "format": "date-time"},
+    "last_active": {"type": "string", "format": "date-time"},
+    "xmpp_jid": {"type": "string"},
+    "photo_url": {"type": "string", "format": "uri"},
+    "presence": {
+      "type": "object",
+      "properties": {
+        "status": {"type": "string", "enum": ["chat", "away", "xa", "dnd"]},
+        "show": {"type": "string"},
+        "idle": {"type": "integer"},
+        "client": {
+          "type": "object",
+          "properties": {
+            "type": {"type": "string"},
+            "version": {"type": "string"}
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {"type": "string", "format": "uri"}
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.hipchat.com/v2/room/API%20Evangelist/notification",
+    "headers": {
+      "Authorization": "Bearer 7f8c9d2a1b3e4f5a6b7c8d9e0f1a2b3c",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "message": "Deploy completed: <a href=\"https://github.com/api-evangelist/hipchat\">api-evangelist/hipchat</a>",
+      "color": "green",
+      "notify": true,
+      "message_format": "html",
+      "from": "GitHub"
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "X-Ratelimit-Limit": "500",
+      "X-Ratelimit-Remaining": "498",
+      "X-Ratelimit-Reset": "1550268903",
+      "X-FloodControl-Limit": "30",
+      "X-FloodControl-Remaining": "29",
+      "X-FloodControl-Reset": "1550268543"
+    },
+    "body": null
+  }
+}

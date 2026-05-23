@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-schema/hipchat-room-schema.json",
+  "title": "HipChat Room",
+  "description": "A HipChat chat room. Historical schema — HipChat was discontinued on 2019-02-15.",
+  "type": "object",
+  "x-status": "sunset",
+  "required": ["id", "name"],
+  "properties": {
+    "id": {"type": "integer", "description": "Numeric room identifier."},
+    "name": {"type": "string", "maxLength": 50, "description": "Human-readable room name."},
+    "xmpp_jid": {"type": "string", "description": "XMPP JID for the room."},
+    "topic": {"type": "string", "maxLength": 250},
+    "privacy": {"type": "string", "enum": ["public", "private"]},
+    "is_archived": {"type": "boolean"},
+    "is_guest_accessible": {"type": "boolean"},
+    "guest_access_url": {"type": ["string", "null"], "format": "uri"},
+    "created": {"type": "string", "format": "date-time"},
+    "owner": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "integer"},
+        "mention_name": {"type": "string"},
+        "name": {"type": "string"}
+      }
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "integer"},
+          "mention_name": {"type": "string"},
+          "name": {"type": "string"}
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "messages_sent": {"type": "integer"},
+        "last_active": {"type": "string", "format": "date-time"}
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {"type": "string", "format": "uri"},
+        "webhooks": {"type": "string", "format": "uri"},
+        "members": {"type": "string", "format": "uri"},
+        "participants": {"type": "string", "format": "uri"}
+      }
+    }
+  }
+}

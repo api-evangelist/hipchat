@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-structure.org/draft-00",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-structure/hipchat-room-structure.json",
+  "name": "HipChatRoom",
+  "type": "object",
+  "description": "JSON Structure for a HipChat Room. Historical surface; HipChat was discontinued 2019-02-15.",
+  "x-status": "sunset",
+  "properties": {
+    "id": {"type": "int64", "required": true},
+    "name": {"type": "string", "required": true, "maxLength": 50},
+    "topic": {"type": "string", "maxLength": 250},
+    "privacy": {"type": "string", "enum": ["public", "private"]},
+    "is_archived": {"type": "boolean"},
+    "is_guest_accessible": {"type": "boolean"},
+    "guest_access_url": {"type": "string", "format": "uri", "nullable": true},
+    "created": {"type": "string", "format": "date-time"},
+    "owner": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "int64"},
+        "mention_name": {"type": "string"},
+        "name": {"type": "string"}
+      }
+    },
+    "participants": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/UserReference"}
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "messages_sent": {"type": "int64"},
+        "last_active": {"type": "string", "format": "date-time"}
+      }
+    }
+  },
+  "$defs": {
+    "UserReference": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "int64"},
+        "mention_name": {"type": "string"},
+        "name": {"type": "string"}
+      }
+    }
+  }
+}

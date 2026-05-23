@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/hipchat/main/json-schema/hipchat-webhook-schema.json",
+  "title": "HipChat Webhook",
+  "description": "A webhook registration against a HipChat room. Historical schema — HipChat was discontinued on 2019-02-15.",
+  "type": "object",
+  "x-status": "sunset",
+  "required": ["url", "event"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "url": {"type": "string", "format": "uri"},
+    "event": {
+      "type": "string",
+      "enum": [
+        "room_message",
+        "room_notification",
+        "room_enter",
+        "room_exit",
+        "room_topic_change",
+        "room_archived",
+        "room_unarchived",
+        "room_deleted",
+        "room_created",
+        "room_file_upload"
+      ]
+    },
+    "pattern": {
+      "type": "string",
+      "description": "Optional regex pattern; webhook fires only when room messages match."
+    },
+    "authentication": {
+      "type": "string",
+      "enum": ["none", "jwt"],
+      "default": "jwt",
+      "description": "When set to jwt, HipChat includes a signed_request JWT query parameter on each delivery."
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "self": {"type": "string", "format": "uri"}
+      }
+    }
+  }
+}

@@ -1,0 +1,243 @@
+asyncapi: 2.6.0
+info:
+  title: HipChat Webhooks API
+  version: '2.0'
+  description: |
+    Event-driven webhook deliveries from Atlassian's discontinued HipChat platform. Every webhook POST
+    included a `signed_request` query parameter containing a JWT that the receiver was expected to verify
+    against the shared secret negotiated at add-on installation time.
+
+    **Status: DISCONTINUED on February 15, 2019.** Preserved here for historical reference.
+  contact:
+    name: Atlassian (historical)
+    url: https://www.atlassian.com/migration/move-from-hipchat-to-slack
+  license:
+    name: Documentation reused under Atlassian Developer Terms
+    url: https://developer.atlassian.com/platform/marketplace/atlassian-developer-terms/
+  x-status: sunset
+  x-sunset-date: '2019-02-15'
+defaultContentType: application/json
+servers:
+  hipchat-cloud:
+    url: hipchat-cloud
+    protocol: https
+    description: HipChat Cloud delivered webhook POSTs to consumer-supplied URLs (historical; no longer
+      operational).
+channels:
+  /webhook/room_message:
+    description: Triggered when a message matching the optional regex pattern is posted to a room.
+    subscribe:
+      operationId: onRoomMessage
+      summary: Message Posted To Room
+      message:
+        $ref: '#/components/messages/RoomMessageEvent'
+  /webhook/room_notification:
+    description: Triggered when a notification is sent to a room.
+    subscribe:
+      operationId: onRoomNotification
+      summary: Notification Sent To Room
+      message:
+        $ref: '#/components/messages/RoomNotificationEvent'
+  /webhook/room_enter:
+    description: Triggered when a user enters a room.
+    subscribe:
+      operationId: onRoomEnter
+      summary: User Entered Room
+      message:
+        $ref: '#/components/messages/RoomMembershipEvent'
+  /webhook/room_exit:
+    description: Triggered when a user leaves a room.
+    subscribe:
+      operationId: onRoomExit
+      summary: User Exited Room
+      message:
+        $ref: '#/components/messages/RoomMembershipEvent'
+  /webhook/room_topic_change:
+    description: Triggered when a room topic is changed.
+    subscribe:
+      operationId: onRoomTopicChange
+      summary: Room Topic Changed
+      message:
+        $ref: '#/components/messages/RoomTopicChangeEvent'
+  /webhook/room_archived:
+    description: Triggered when a room is archived.
+    subscribe:
+      operationId: onRoomArchived
+      summary: Room Archived
+      message:
+        $ref: '#/components/messages/RoomLifecycleEvent'
+  /webhook/room_unarchived:
+    description: Triggered when a room is restored from the archive.
+    subscribe:
+      operationId: onRoomUnarchived
+      summary: Room Unarchived
+      message:
+        $ref: '#/components/messages/RoomLifecycleEvent'
+  /webhook/room_deleted:
+    description: Triggered when a room is permanently deleted.
+    subscribe:
+      operationId: onRoomDeleted
+      summary: Room Deleted
+      message:
+        $ref: '#/components/messages/RoomLifecycleEvent'
+  /webhook/room_created:
+    description: Triggered when a new room is created.
+    subscribe:
+      operationId: onRoomCreated
+      summary: Room Created
+      message:
+        $ref: '#/components/messages/RoomLifecycleEvent'
+  /webhook/room_file_upload:
+    description: Triggered when a file is uploaded to a room.
+    subscribe:
+      operationId: onRoomFileUpload
+      summary: File Uploaded To Room
+      message:
+        $ref: '#/components/messages/RoomFileUploadEvent'
+components:
+  messages:
+    RoomMessageEvent:
+      name: room_message
+      title: Room Message
+      summary: Webhook delivery for a message posted to a room.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomMessageEnvelope'
+    RoomNotificationEvent:
+      name: room_notification
+      title: Room Notification
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomNotificationEnvelope'
+    RoomMembershipEvent:
+      name: room_membership
+      title: Room Membership Change
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomMembershipEnvelope'
+    RoomTopicChangeEvent:
+      name: room_topic_change
+      title: Room Topic Change
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomTopicChangeEnvelope'
+    RoomLifecycleEvent:
+      name: room_lifecycle
+      title: Room Lifecycle Change
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomLifecycleEnvelope'
+    RoomFileUploadEvent:
+      name: room_file_upload
+      title: Room File Upload
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RoomFileUploadEnvelope'
+  schemas:
+    BaseEnvelope:
+      type: object
+      properties:
+        event: {type: string}
+        webhook_id: {type: string}
+        oauth_client_id: {type: string}
+        item:
+          type: object
+    RoomMessageEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event:
+            type: string
+            enum: [room_message]
+          item:
+            type: object
+            properties:
+              message:
+                type: object
+                properties:
+                  id: {type: string}
+                  date: {type: string, format: date-time}
+                  from:
+                    type: object
+                    properties:
+                      id: {type: integer}
+                      mention_name: {type: string}
+                      name: {type: string}
+                  message: {type: string}
+                  type: {type: string}
+                  message_format: {type: string}
+                  mentions:
+                    type: array
+                    items: {type: object}
+              room:
+                type: object
+                properties:
+                  id: {type: integer}
+                  name: {type: string}
+    RoomNotificationEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event: {type: string, enum: [room_notification]}
+    RoomMembershipEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event:
+            type: string
+            enum: [room_enter, room_exit]
+          item:
+            type: object
+            properties:
+              sender:
+                type: object
+                properties:
+                  id: {type: integer}
+                  mention_name: {type: string}
+              room:
+                type: object
+                properties:
+                  id: {type: integer}
+                  name: {type: string}
+    RoomTopicChangeEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event: {type: string, enum: [room_topic_change]}
+          item:
+            type: object
+            properties:
+              topic: {type: string}
+              room:
+                type: object
+                properties:
+                  id: {type: integer}
+                  name: {type: string}
+    RoomLifecycleEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event:
+            type: string
+            enum: [room_archived, room_unarchived, room_deleted, room_created]
+    RoomFileUploadEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/BaseEnvelope'
+      - type: object
+        properties:
+          event: {type: string, enum: [room_file_upload]}
+          item:
+            type: object
+            properties:
+              file:
+                type: object
+                properties:
+                  name: {type: string}
+                  url: {type: string, format: uri}
+                  size: {type: integer}
+                  thumb_url: {type: string, format: uri}

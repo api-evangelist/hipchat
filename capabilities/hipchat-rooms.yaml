@@ -1,0 +1,81 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: HipChat REST API v2 — Rooms
+  description: HipChat Rooms management capability. Historical surface; HipChat was discontinued
+    2019-02-15. Useful for migration-pattern research and adapter scaffolding.
+  tags:
+  - HipChat
+  - Rooms
+  - Sunset
+  created: '2026-05-23'
+  modified: '2026-05-23'
+  status: sunset
+  sunsetDate: '2019-02-15'
+binds:
+- namespace: env
+  keys:
+    HIPCHAT_API_TOKEN: HIPCHAT_API_TOKEN
+capability:
+  consumes:
+  - type: http
+    namespace: hipchat-rooms
+    baseUri: https://api.hipchat.com/v2
+    description: HipChat Rooms business capability (historical).
+    resources:
+    - name: rooms
+      path: /room
+      operations:
+      - name: listrooms
+        method: GET
+        description: HipChat Get All Rooms
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - {name: start-index, in: query, type: integer}
+        - {name: max-results, in: query, type: integer}
+        - {name: include-private, in: query, type: boolean}
+        - {name: include-archived, in: query, type: boolean}
+      - name: createroom
+        method: POST
+        description: HipChat Create Room
+        outputRawFormat: json
+        outputParameters:
+        - {name: result, type: object, value: $.}
+    - name: room
+      path: /room/{id_or_name}
+      operations:
+      - name: getroom
+        method: GET
+        description: HipChat Get Room Details
+        outputRawFormat: json
+        outputParameters:
+        - {name: result, type: object, value: $.}
+      - name: updateroom
+        method: PUT
+        description: HipChat Update Room
+      - name: deleteroom
+        method: DELETE
+        description: HipChat Delete Room
+    authentication:
+      type: bearer
+      token: '{{env.HIPCHAT_API_TOKEN}}'
+  exposes:
+  - type: rest
+    namespace: hipchat-rooms-rest
+    port: 8080
+    description: REST adapter for HipChat Rooms.
+    resources:
+    - path: /v1/rooms
+      name: rooms
+      operations:
+      - {method: GET, name: listrooms, call: hipchat-rooms.listrooms}
+      - {method: POST, name: createroom, call: hipchat-rooms.createroom}
+    - path: /v1/rooms/{id_or_name}
+      name: room
+      operations:
+      - {method: GET, name: getroom, call: hipchat-rooms.getroom}
+      - {method: PUT, name: updateroom, call: hipchat-rooms.updateroom}
+      - {method: DELETE, name: deleteroom, call: hipchat-rooms.deleteroom}

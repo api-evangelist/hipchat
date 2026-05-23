@@ -1,0 +1,50 @@
+apiCommonsRateLimits: 0.1
+provider:
+  id: hipchat
+  name: HipChat REST API v2
+  status: sunset
+  sunsetDate: '2019-02-15'
+source:
+  documentation: https://developer.atlassian.com/server/hipchat/hipchat-rest-api-rate-limits/
+policies:
+- id: overall
+  scope: per-token
+  description: Aggregate limit across the entire HipChat REST API v2.
+  limit: 500
+  window:
+    duration: 5
+    unit: minutes
+  response:
+    status: 429
+    headers:
+    - name: X-Ratelimit-Limit
+      description: The number of requests you are allowed per 5 minutes.
+    - name: X-Ratelimit-Remaining
+      description: How many requests you can make before hitting the limit.
+    - name: X-Ratelimit-Reset
+      description: The next time (as a Unix timestamp) the limit will be updated.
+- id: room-notifications
+  scope: per-room
+  description: Per-room flood-control governing the /room/{id}/notification and /room/{id}/message
+    endpoints. Limits are independent per recipient room or user.
+  limit: 30
+  window:
+    duration: 1
+    unit: minute
+  appliesTo:
+  - POST /room/{id_or_name}/notification
+  - POST /room/{id_or_name}/message
+  - POST /user/{id_or_email}/message
+  response:
+    status: 429
+    headers:
+    - name: X-FloodControl-Limit
+      description: The number of messages you are allowed to send per minute to a given room.
+    - name: X-FloodControl-Remaining
+      description: How many requests you can make before hitting the limit.
+    - name: X-FloodControl-Reset
+      description: The next time (as a Unix timestamp) the limit will be updated.
+notes:
+- Limits applied uniformly across token types (add-on, user, personal access, room notification).
+- Documentation never differentiated quotas by paid plan tier.
+- All limits are historical and no longer enforced (the API is offline).

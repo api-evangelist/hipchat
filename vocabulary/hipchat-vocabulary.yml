@@ -1,0 +1,91 @@
+name: HipChat Vocabulary
+description: Domain vocabulary for Atlassian's discontinued HipChat team chat platform. Covers chat,
+  messaging, room lifecycle, integrations, add-on (HipChat Connect) constructs, and sunset semantics.
+url: https://raw.githubusercontent.com/api-evangelist/hipchat/main/vocabulary/hipchat-vocabulary.yml
+created: '2026-05-23'
+modified: '2026-05-23'
+status: sunset
+sunsetDate: '2019-02-15'
+replacement: https://slack.com
+terms:
+- term: Room
+  definition: A persistent chat space (public or private) where users post messages, share files, and
+    receive notifications.
+  relatedTerms: [PublicRoom, PrivateRoom, ArchivedRoom, GuestAccess]
+- term: PublicRoom
+  definition: A room any HipChat group member could join; discoverable in the directory.
+- term: PrivateRoom
+  definition: A room accessible only to explicitly invited members.
+- term: GuestAccess
+  definition: Optional feature exposing a unique guest_access_url that allows non-members (often
+    customers) to join a room without a full HipChat account.
+- term: ArchivedRoom
+  definition: A room that has been archived (read-only, hidden from most listings) but not deleted.
+- term: User
+  definition: A person with a HipChat account in a group, identified by id, email, and a unique
+    mention_name for @-mentions.
+- term: MentionName
+  definition: The @-handle used to address a HipChat user inline, e.g. @kinlane.
+- term: Group
+  definition: The top-level tenant in HipChat, owning users, rooms, add-ons, and emoticons.
+- term: Message
+  definition: A chat utterance posted by a user to a room or private chat.
+- term: Notification
+  definition: A non-user message delivered to a room by an integration or add-on via the
+    /room/{id}/notification endpoint, supporting color coding and the notify flag.
+- term: Color
+  definition: The visual highlight applied to a notification message (yellow, green, red, purple, gray,
+    random).
+- term: Card
+  definition: A rich, structured attachment renderable in HipChat clients (HipChat Cards).
+- term: Emoticon
+  definition: A custom or global image keyed by a short text shortcut (e.g. (smile)).
+- term: Webhook
+  definition: An HTTP callback registered against a room and a specific event (e.g. room_message),
+    delivered with a JWT-signed signed_request query parameter.
+- term: SignedRequest
+  definition: The JWT query parameter HipChat included in every webhook and add-on REST call, signed with
+    the shared secret negotiated at add-on installation.
+- term: Addon
+  definition: A HipChat Connect application installed into a group via a descriptor URL, declaring
+    capabilities such as webhooks, glances, dialogs, and configuration pages.
+- term: AddonDescriptor
+  definition: The JSON document at the root of every Connect add-on declaring its key, capabilities, OAuth
+    scopes, and authentication.
+- term: Capabilities
+  definition: The discovery document at /capabilities advertising the HipChat installation's API endpoints
+    and OAuth URLs.
+- term: Glance
+  definition: A small status panel in a room sidebar surfaced by an add-on.
+- term: Dialog
+  definition: A modal dialog launched by an add-on within the HipChat client.
+- term: Sidebar
+  definition: A persistent sidebar view contributed by an add-on, often paired with a Glance.
+- term: OAuthScope
+  definition: A capability the add-on requests at install time, controlling which REST endpoints it can
+    call. HipChat defined eight scopes (admin_group, admin_room, manage_rooms, send_message,
+    send_notification, view_group, view_messages, view_room).
+- term: PersonalAccessToken
+  definition: A long-lived token issued to a user for direct API access without an add-on.
+- term: RoomNotificationToken
+  definition: A token scoped to a single room that allows sending notifications only.
+- term: AddonToken
+  definition: A short-lived bearer token issued to a HipChat Connect add-on via the /oauth/token endpoint.
+- term: FloodControl
+  definition: Per-room rate limit (30 messages/minute) governing room notifications, surfaced via
+    X-FloodControl-* response headers.
+- term: HipChatCloud
+  definition: The multi-tenant SaaS offering at hipchat.com. Discontinued 2019-02-15.
+- term: HipChatServer
+  definition: The single-server self-hosted distribution. Discontinued 2019-02-15.
+- term: HipChatDataCenter
+  definition: Clustered self-hosted distribution announced 2017-05-11. Discontinued 2019-02-15.
+- term: Stride
+  definition: HipChat's successor product launched 2017-09-07. Discontinued alongside HipChat
+    2019-02-15; IP sold to Slack.
+- term: Sunset
+  definition: The end-of-life of a product or API surface. For HipChat, sunset occurred 2019-02-15 with
+    Slack as the recommended replacement.
+- term: Migration
+  definition: The export-and-import workflow Atlassian and Slack jointly offered to move HipChat groups,
+    rooms, users, and history into Slack workspaces.

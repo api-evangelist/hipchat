@@ -1,0 +1,753 @@
+openapi: 3.0.3
+info:
+  title: HipChat REST API v2
+  version: '2.0'
+  summary: Historical OpenAPI for Atlassian's discontinued HipChat team chat platform.
+  description: |
+    The HipChat REST API v2 powered Atlassian's HipChat team chat platform. This OpenAPI document
+    is a historical reconstruction based on the Atlassian developer documentation (developer.atlassian.com/server/hipchat)
+    and the official client libraries published under github.com/hipchat. It is preserved for archival
+    and migration research only.
+
+    **Status: DISCONTINUED on February 15, 2019.** Slack acquired the HipChat and Stride IP from
+    Atlassian on July 26, 2018 and the four products (HipChat Cloud, Stride, HipChat Server, HipChat Data
+    Center) were sunset together. No production endpoints remain reachable.
+  termsOfService: https://www.atlassian.com/legal/customer-agreement
+  contact:
+    name: Atlassian (historical)
+    url: https://www.atlassian.com/migration/move-from-hipchat-to-slack
+  license:
+    name: Documentation reused under Atlassian Developer Terms
+    url: https://developer.atlassian.com/platform/marketplace/atlassian-developer-terms/
+  x-status: sunset
+  x-lifecycle: discontinued
+  x-sunset-date: '2019-02-15'
+  x-end-of-sale: '2018-07-26'
+  x-replacement: https://slack.com
+servers:
+- url: https://api.hipchat.com/v2
+  description: HipChat Cloud (historical; no longer reachable)
+- url: https://{hipchat-server-host}/v2
+  description: HipChat Server / Data Center (historical; self-hosted, no longer supported)
+  variables:
+    hipchat-server-host:
+      default: hipchat.example.com
+security:
+- BearerAuth: []
+- QueryToken: []
+tags:
+- name: Rooms
+  description: Create, read, update, archive, and notify chat rooms.
+- name: Users
+  description: Manage HipChat users and look up profile information.
+- name: Messages
+  description: Send and retrieve room messages and private messages.
+- name: Webhooks
+  description: Register and manage room webhooks.
+- name: Emoticons
+  description: Read and manage the emoticon catalog.
+- name: Sessions
+  description: Active XMPP / web sessions.
+- name: OAuth Sessions
+  description: OAuth 2 client credentials and add-on session management.
+- name: Capabilities
+  description: HipChat Connect add-on capability discovery.
+- name: Add-ons
+  description: Install, configure, and uninstall HipChat Connect add-ons.
+paths:
+  /capabilities:
+    get:
+      tags: [Capabilities]
+      summary: Get HipChat Capabilities Descriptor
+      description: Returns the capabilities document describing the API surface and OAuth endpoints of the
+        HipChat installation. Used by HipChat Connect add-ons during installation.
+      operationId: getCapabilities
+      responses:
+        '200':
+          description: Capabilities descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+  /oauth/token:
+    post:
+      tags: [OAuth Sessions]
+      summary: Generate OAuth Access Token
+      description: Exchange client credentials (or an authorization code) for a bearer access token. Used
+        by HipChat Connect add-ons after installation.
+      operationId: generateToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [grant_type]
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials, authorization_code, password, refresh_token]
+                username:
+                  type: string
+                password:
+                  type: string
+                scope:
+                  type: string
+                  description: Space-separated list of scopes.
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: {type: string}
+                  expires_in: {type: integer}
+                  group_id: {type: integer}
+                  group_name: {type: string}
+                  scope: {type: string}
+                  token_type: {type: string, enum: [bearer]}
+  /room:
+    get:
+      tags: [Rooms]
+      summary: Get All Rooms
+      description: List all rooms in the HipChat group.
+      operationId: getAllRooms
+      parameters:
+      - $ref: '#/components/parameters/StartIndex'
+      - $ref: '#/components/parameters/MaxResults'
+      - name: include-private
+        in: query
+        schema: {type: boolean, default: false}
+      - name: include-archived
+        in: query
+        schema: {type: boolean, default: false}
+      responses:
+        '200':
+          description: Page of rooms.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomCollection'
+    post:
+      tags: [Rooms]
+      summary: Create Room
+      description: Create a new HipChat room owned by the authenticated user.
+      operationId: createRoom
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomCreateRequest'
+      responses:
+        '201':
+          description: Room created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomReference'
+  /room/{id_or_name}:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    get:
+      tags: [Rooms]
+      summary: Get Room Details
+      description: Returns room metadata, owner, privacy, topic, and integration settings.
+      operationId: getRoom
+      responses:
+        '200':
+          description: Room details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+    put:
+      tags: [Rooms]
+      summary: Update Room
+      description: Update mutable room fields (name, topic, privacy, owner, archived).
+      operationId: updateRoom
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomUpdateRequest'
+      responses:
+        '204':
+          description: Room updated.
+    delete:
+      tags: [Rooms]
+      summary: Delete Room
+      description: Permanently delete a room.
+      operationId: deleteRoom
+      responses:
+        '204':
+          description: Room deleted.
+  /room/{id_or_name}/notification:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    post:
+      tags: [Rooms, Messages]
+      summary: Send Room Notification
+      description: |
+        Send a notification message to a room. Subject to a separate flood-control rate limit of
+        30 messages per minute per room (see `X-FloodControl-Limit` response headers).
+      operationId: sendRoomNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '204':
+          description: Notification accepted.
+  /room/{id_or_name}/message:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    post:
+      tags: [Rooms, Messages]
+      summary: Send Room Message
+      description: Send a message authored by the authenticated user to a room.
+      operationId: sendRoomMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: {type: string, maxLength: 10000}
+      responses:
+        '200':
+          description: Message accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: {type: string}
+                  timestamp: {type: string, format: date-time}
+  /room/{id_or_name}/history:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    get:
+      tags: [Rooms, Messages]
+      summary: View Room History
+      description: Returns the history of messages for the room.
+      operationId: getRoomHistory
+      parameters:
+      - name: date
+        in: query
+        schema: {type: string, format: date-time}
+      - name: timezone
+        in: query
+        schema: {type: string, default: UTC}
+      - $ref: '#/components/parameters/StartIndex'
+      - $ref: '#/components/parameters/MaxResults'
+      - name: reverse
+        in: query
+        schema: {type: boolean, default: true}
+      responses:
+        '200':
+          description: Message history page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageCollection'
+  /room/{id_or_name}/history/latest:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    get:
+      tags: [Rooms, Messages]
+      summary: View Recent Room History
+      description: Returns the most recent messages from a room with optional not-before filtering.
+      operationId: getLatestRoomHistory
+      parameters:
+      - name: not-before
+        in: query
+        schema: {type: string}
+      - name: timezone
+        in: query
+        schema: {type: string, default: UTC}
+      - $ref: '#/components/parameters/MaxResults'
+      responses:
+        '200':
+          description: Recent messages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageCollection'
+  /room/{id_or_name}/webhook:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    get:
+      tags: [Webhooks]
+      summary: Get All Room Webhooks
+      description: List webhooks registered against the room.
+      operationId: getAllRoomWebhooks
+      responses:
+        '200':
+          description: Webhook collection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookCollection'
+    post:
+      tags: [Webhooks]
+      summary: Create Room Webhook
+      description: Register a webhook against a room for a specified event.
+      operationId: createRoomWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCreateRequest'
+      responses:
+        '201':
+          description: Webhook created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+  /room/{id_or_name}/webhook/{webhook_id}:
+    parameters:
+    - $ref: '#/components/parameters/RoomIdOrName'
+    - name: webhook_id
+      in: path
+      required: true
+      schema: {type: string}
+    get:
+      tags: [Webhooks]
+      summary: Get Room Webhook
+      operationId: getRoomWebhook
+      responses:
+        '200':
+          description: Webhook details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+    delete:
+      tags: [Webhooks]
+      summary: Delete Room Webhook
+      operationId: deleteRoomWebhook
+      responses:
+        '204':
+          description: Webhook deleted.
+  /user:
+    get:
+      tags: [Users]
+      summary: Get All Users
+      description: List all users in the HipChat group.
+      operationId: getAllUsers
+      parameters:
+      - $ref: '#/components/parameters/StartIndex'
+      - $ref: '#/components/parameters/MaxResults'
+      - name: include-guests
+        in: query
+        schema: {type: boolean, default: false}
+      - name: include-deleted
+        in: query
+        schema: {type: boolean, default: false}
+      responses:
+        '200':
+          description: User collection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCollection'
+  /user/{id_or_email}:
+    parameters:
+    - name: id_or_email
+      in: path
+      required: true
+      schema: {type: string}
+    get:
+      tags: [Users]
+      summary: Get User Details
+      operationId: getUser
+      responses:
+        '200':
+          description: User profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags: [Users]
+      summary: Update User
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '204':
+          description: User updated.
+    delete:
+      tags: [Users]
+      summary: Delete User
+      operationId: deleteUser
+      responses:
+        '204':
+          description: User deleted.
+  /user/{id_or_email}/message:
+    parameters:
+    - name: id_or_email
+      in: path
+      required: true
+      schema: {type: string}
+    post:
+      tags: [Users, Messages]
+      summary: Send Private Message To User
+      description: Send a one-to-one private message. Requires the `send_message` scope.
+      operationId: sendPrivateMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: {type: string, maxLength: 10000}
+                notify: {type: boolean, default: false}
+                message_format: {type: string, enum: [text, html], default: html}
+      responses:
+        '204':
+          description: Message accepted.
+  /emoticon:
+    get:
+      tags: [Emoticons]
+      summary: Get All Emoticons
+      operationId: getAllEmoticons
+      parameters:
+      - $ref: '#/components/parameters/StartIndex'
+      - $ref: '#/components/parameters/MaxResults'
+      - name: type
+        in: query
+        schema: {type: string, enum: [group, global, all], default: all}
+      responses:
+        '200':
+          description: Emoticon collection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmoticonCollection'
+  /emoticon/{emoticon_id_or_shortcut}:
+    parameters:
+    - name: emoticon_id_or_shortcut
+      in: path
+      required: true
+      schema: {type: string}
+    get:
+      tags: [Emoticons]
+      summary: Get Emoticon Details
+      operationId: getEmoticon
+      responses:
+        '200':
+          description: Emoticon details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Emoticon'
+  /addon:
+    post:
+      tags: [Add-ons]
+      summary: Install Add-on
+      description: Register a HipChat Connect add-on by submitting its descriptor URL.
+      operationId: installAddon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url: {type: string, format: uri}
+      responses:
+        '201':
+          description: Add-on installed.
+  /addon/{addon_key_or_id}/installable/{installable_id}:
+    parameters:
+    - name: addon_key_or_id
+      in: path
+      required: true
+      schema: {type: string}
+    - name: installable_id
+      in: path
+      required: true
+      schema: {type: string}
+    delete:
+      tags: [Add-ons]
+      summary: Uninstall Add-on Installation
+      operationId: uninstallAddon
+      responses:
+        '204':
+          description: Add-on installation removed.
+  /session:
+    get:
+      tags: [Sessions]
+      summary: Get Active Sessions
+      operationId: getActiveSessions
+      responses:
+        '200':
+          description: Active sessions list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: {type: object}
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Pass the token as `Authorization: Bearer {token}`. Supports add-on, user, personal access,
+        and room notification tokens.
+    QueryToken:
+      type: apiKey
+      in: query
+      name: auth_token
+      description: Pass the token as the `auth_token` query parameter (legacy compatibility).
+  parameters:
+    RoomIdOrName:
+      name: id_or_name
+      in: path
+      required: true
+      description: Numeric room id or URL-encoded room name.
+      schema: {type: string}
+    StartIndex:
+      name: start-index
+      in: query
+      schema: {type: integer, minimum: 0, default: 0}
+    MaxResults:
+      name: max-results
+      in: query
+      schema: {type: integer, minimum: 0, maximum: 1000, default: 100}
+  schemas:
+    RoomReference:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        links:
+          type: object
+          properties:
+            self: {type: string, format: uri}
+    Room:
+      allOf:
+      - $ref: '#/components/schemas/RoomReference'
+      - type: object
+        properties:
+          xmpp_jid: {type: string}
+          statistics:
+            type: object
+            properties:
+              messages_sent: {type: integer}
+              last_active: {type: string, format: date-time}
+          created: {type: string, format: date-time}
+          is_archived: {type: boolean}
+          privacy: {type: string, enum: [public, private]}
+          is_guest_accessible: {type: boolean}
+          topic: {type: string}
+          participants:
+            type: array
+            items: {$ref: '#/components/schemas/UserReference'}
+          owner:
+            $ref: '#/components/schemas/UserReference'
+          guest_access_url: {type: string, format: uri, nullable: true}
+    RoomCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/RoomReference'}
+        startIndex: {type: integer}
+        maxResults: {type: integer}
+        links:
+          type: object
+          properties:
+            self: {type: string}
+            next: {type: string}
+    RoomCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, maxLength: 50}
+        topic: {type: string, maxLength: 250}
+        guest_access: {type: boolean, default: false}
+        privacy: {type: string, enum: [public, private], default: public}
+        owner_user_id: {type: string}
+    RoomUpdateRequest:
+      type: object
+      properties:
+        name: {type: string}
+        topic: {type: string}
+        is_archived: {type: boolean}
+        privacy: {type: string, enum: [public, private]}
+        owner:
+          type: object
+          properties:
+            id: {type: string}
+    NotificationRequest:
+      type: object
+      required: [message]
+      properties:
+        message: {type: string, maxLength: 10000}
+        color: {type: string, enum: [yellow, green, red, purple, gray, random], default: yellow}
+        notify: {type: boolean, default: false}
+        message_format: {type: string, enum: [html, text], default: html}
+        from: {type: string, maxLength: 64}
+        attach_to: {type: string}
+        card:
+          type: object
+          description: Optional rich-card payload (HipChat Cards).
+    Message:
+      type: object
+      properties:
+        id: {type: string}
+        from:
+          oneOf:
+          - {$ref: '#/components/schemas/UserReference'}
+          - type: object
+            properties:
+              name: {type: string}
+        message: {type: string}
+        date: {type: string, format: date-time}
+        type: {type: string, enum: [message, notification, guest_access, topic]}
+        color: {type: string}
+        message_format: {type: string, enum: [html, text]}
+        mentions:
+          type: array
+          items: {$ref: '#/components/schemas/UserReference'}
+        file:
+          type: object
+          nullable: true
+    MessageCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/Message'}
+        startIndex: {type: integer}
+        maxResults: {type: integer}
+    UserReference:
+      type: object
+      properties:
+        id: {type: integer}
+        mention_name: {type: string}
+        name: {type: string}
+        links:
+          type: object
+          properties:
+            self: {type: string, format: uri}
+    User:
+      allOf:
+      - $ref: '#/components/schemas/UserReference'
+      - type: object
+        properties:
+          email: {type: string, format: email}
+          title: {type: string}
+          presence:
+            type: object
+            properties:
+              status: {type: string, enum: [chat, away, xa, dnd]}
+              show: {type: string}
+              idle: {type: integer}
+              client:
+                type: object
+                properties:
+                  type: {type: string}
+                  version: {type: string}
+          xmpp_jid: {type: string}
+          is_group_admin: {type: boolean}
+          is_guest: {type: boolean}
+          is_deleted: {type: boolean}
+          timezone: {type: string}
+          last_active: {type: string, format: date-time}
+          created: {type: string, format: date-time}
+          photo_url: {type: string, format: uri}
+    UserCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/UserReference'}
+        startIndex: {type: integer}
+        maxResults: {type: integer}
+    UserUpdateRequest:
+      type: object
+      properties:
+        name: {type: string}
+        title: {type: string}
+        mention_name: {type: string}
+        is_group_admin: {type: boolean}
+        timezone: {type: string}
+        email: {type: string, format: email}
+    Webhook:
+      type: object
+      properties:
+        id: {type: string}
+        name: {type: string}
+        url: {type: string, format: uri}
+        event:
+          type: string
+          enum: [room_message, room_notification, room_enter, room_exit, room_topic_change, room_archived,
+            room_unarchived, room_deleted, room_created, room_file_upload]
+        pattern: {type: string}
+        authentication: {type: string, enum: [none, jwt], default: jwt}
+        links:
+          type: object
+          properties:
+            self: {type: string, format: uri}
+    WebhookCreateRequest:
+      type: object
+      required: [url, event]
+      properties:
+        url: {type: string, format: uri}
+        event: {type: string}
+        pattern: {type: string}
+        name: {type: string}
+        authentication: {type: string, enum: [none, jwt], default: jwt}
+    WebhookCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/Webhook'}
+        startIndex: {type: integer}
+        maxResults: {type: integer}
+    Emoticon:
+      type: object
+      properties:
+        id: {type: integer}
+        shortcut: {type: string}
+        url: {type: string, format: uri}
+        creator:
+          $ref: '#/components/schemas/UserReference'
+        audio:
+          type: array
+          items:
+            type: object
+        height: {type: integer}
+        width: {type: integer}
+    EmoticonCollection:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/Emoticon'}
+        startIndex: {type: integer}
+        maxResults: {type: integer}

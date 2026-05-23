@@ -1,0 +1,27 @@
+{
+  "event": "room_message",
+  "webhook_id": "23456",
+  "oauth_client_id": "addon-key-1234",
+  "item": {
+    "message": {
+      "id": "abcde-12345-fghij-67890",
+      "date": "2019-02-14T22:51:03.123456+00:00",
+      "from": {
+        "id": 42,
+        "mention_name": "kinlane",
+        "name": "Kin Lane"
+      },
+      "message": "@all migration to Slack scheduled for tomorrow.",
+      "type": "message",
+      "message_format": "text",
+      "mentions": [
+        {"id": 0, "mention_name": "all", "name": "All Members"}
+      ]
+    },
+    "room": {
+      "id": 1234567,
+      "name": "API Evangelist",
+      "links": {"self": "https://api.hipchat.com/v2/room/1234567"}
+    }
+  }
+}

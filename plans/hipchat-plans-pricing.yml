@@ -1,0 +1,76 @@
+apiCommonsPlans: 0.1
+provider:
+  id: hipchat
+  name: HipChat (Atlassian)
+  status: sunset
+  sunsetDate: '2019-02-15'
+  replacement:
+    name: Slack
+    url: https://slack.com
+notice: |
+  HipChat's pricing pages went offline with the product on 2019-02-15. The plans below are reconstructed
+  from contemporaneous Atlassian announcements and pricing pages cached in archive.org. They are
+  preserved for historical context only — they are NOT in-market and cannot be purchased.
+plans:
+- id: hipchat-basic
+  name: Basic
+  status: discontinued
+  audience: Small teams
+  price:
+    amount: 0
+    currency: USD
+    interval: monthly
+  features:
+  - Unlimited users
+  - Unlimited public and private rooms
+  - 25,000-message search history cap
+  - 5 GB file storage per team
+  - 1:1 video and screen sharing
+- id: hipchat-plus
+  name: Plus
+  status: discontinued
+  audience: Growing teams
+  price:
+    amount: 2
+    currency: USD
+    interval: monthly
+    per: user
+  features:
+  - Unlimited message search history
+  - Unlimited file storage
+  - Group video calling
+  - Group screen sharing
+  - SAML SSO
+  - 99.95% uptime SLA
+- id: hipchat-server
+  name: HipChat Server
+  status: discontinued
+  audience: Self-hosted single-server deployments
+  price:
+    amount: 10
+    currency: USD
+    interval: one-time
+    per: user
+    minimum: 100
+  features:
+  - Self-hosted on customer infrastructure
+  - Tiered perpetual licensing (10-user starter tier, then per-user pricing)
+  - Includes 12 months of maintenance and updates
+- id: hipchat-data-center
+  name: HipChat Data Center
+  status: discontinued
+  announced: '2017-05-11'
+  audience: Self-hosted clustered deployments
+  price:
+    model: annual-subscription
+    minimum: 500
+    currency: USD
+    notes: Enterprise pricing only; quoted via Atlassian sales.
+  features:
+  - Active-active clustering
+  - High availability
+  - Performance at scale
+  - SAML SSO
+referenceUrls:
+- https://www.atlassian.com/migration/move-from-hipchat-to-slack
+- https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership

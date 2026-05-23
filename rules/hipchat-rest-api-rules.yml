@@ -1,0 +1,72 @@
+extends: ["spectral:oas"]
+rules:
+  hipchat-tag-titlecase:
+    description: All tag names must be Title Case (e.g. "Rooms", "OAuth Sessions").
+    message: "Tag '{{value}}' should be Title Case."
+    severity: warn
+    given: "$.tags[*].name"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][A-Za-z0-9]*( [A-Z][A-Za-z0-9]*)*$"
+  hipchat-summary-titlecase:
+    description: Operation summaries must be Title Case (e.g. "Get Room Details").
+    message: "Operation summary '{{value}}' should be Title Case."
+    severity: warn
+    given: "$.paths[*][get,put,post,delete,patch,options,head].summary"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z]"
+  hipchat-operation-id-camelcase:
+    description: operationId values must be lowerCamelCase per HipChat client library naming.
+    message: "operationId '{{value}}' should be lowerCamelCase."
+    severity: error
+    given: "$.paths[*][get,put,post,delete,patch].operationId"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-zA-Z0-9]*$"
+  hipchat-sunset-banner:
+    description: Sunset/lifecycle metadata MUST be present on info for the historical API.
+    message: "info.x-status must be set; HipChat is a sunset surface."
+    severity: error
+    given: "$.info"
+    then:
+      field: x-status
+      function: truthy
+  hipchat-sunset-date-set:
+    description: A sunset date MUST be recorded for the historical API.
+    severity: error
+    given: "$.info"
+    then:
+      field: x-sunset-date
+      function: truthy
+  hipchat-server-list-marked-historical:
+    description: At least one server should be present and marked as historical in the description.
+    severity: warn
+    given: "$.servers[*].description"
+    then:
+      function: pattern
+      functionOptions:
+        match: "(historical|no longer|sunset|discontinued)"
+  hipchat-auth-header-pattern:
+    description: REST endpoints should declare security via Bearer or auth_token (HipChat conventions).
+    severity: info
+    given: "$.components.securitySchemes"
+    then:
+      function: truthy
+  hipchat-pagination-params:
+    description: List operations should expose start-index and max-results parameters.
+    severity: info
+    given: "$.paths[?(@property.match(/^\\/(room|user|emoticon)$/))].get.parameters[*].name"
+    then:
+      function: enumeration
+      functionOptions:
+        values: [start-index, max-results, include-private, include-archived, include-guests, include-deleted, type]
+  hipchat-room-path-uses-id-or-name:
+    description: Room endpoints should accept the id_or_name path parameter convention.
+    severity: warn
+    given: "$.paths[?(@property.match(/^\\/room\\//))]"
+    then:
+      function: truthy

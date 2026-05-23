@@ -1,0 +1,31 @@
+{
+  "id": 1234567,
+  "name": "API Evangelist",
+  "xmpp_jid": "1234567_api_evangelist@conf.hipchat.com",
+  "topic": "Talking about APIs, integrations, and the API economy.",
+  "privacy": "public",
+  "is_archived": false,
+  "is_guest_accessible": true,
+  "guest_access_url": "https://www.hipchat.com/g3Xx9aBcD",
+  "created": "2014-06-12T16:24:11+00:00",
+  "owner": {
+    "id": 42,
+    "mention_name": "kinlane",
+    "name": "Kin Lane",
+    "links": {"self": "https://api.hipchat.com/v2/user/42"}
+  },
+  "participants": [
+    {"id": 42, "mention_name": "kinlane", "name": "Kin Lane"},
+    {"id": 99, "mention_name": "audrey", "name": "Audrey Watters"}
+  ],
+  "statistics": {
+    "messages_sent": 18432,
+    "last_active": "2019-02-14T22:51:03+00:00"
+  },
+  "links": {
+    "self": "https://api.hipchat.com/v2/room/1234567",
+    "webhooks": "https://api.hipchat.com/v2/room/1234567/webhook",
+    "members": "https://api.hipchat.com/v2/room/1234567/member",
+    "participants": "https://api.hipchat.com/v2/room/1234567/participant"
+  }
+}

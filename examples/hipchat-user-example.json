@@ -1,0 +1,22 @@
+{
+  "id": 42,
+  "mention_name": "kinlane",
+  "name": "Kin Lane",
+  "email": "kin@apievangelist.com",
+  "title": "Founder",
+  "timezone": "America/Los_Angeles",
+  "is_group_admin": true,
+  "is_guest": false,
+  "is_deleted": false,
+  "created": "2014-06-12T16:24:11+00:00",
+  "last_active": "2019-02-14T22:51:03+00:00",
+  "xmpp_jid": "42_kinlane@chat.hipchat.com",
+  "photo_url": "https://s3.amazonaws.com/uploads.hipchat.com/4/abc/avatar.png",
+  "presence": {
+    "status": "chat",
+    "show": "chat",
+    "idle": 12,
+    "client": {"type": "desktop", "version": "4.30.4"}
+  },
+  "links": {"self": "https://api.hipchat.com/v2/user/42"}
+}
