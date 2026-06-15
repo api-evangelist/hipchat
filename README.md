@@ -1,109 +1,105 @@
 # HipChat (hipchat)
 
-> **Status: SUNSET / DISCONTINUED.** HipChat Cloud, HipChat Server, HipChat Data Center, and Stride were
-> all discontinued by Atlassian on **February 15, 2019**. The IP was acquired by Slack on
-> **July 26, 2018** ("Slack has acquired the IP for Stride and Hipchat Cloud, both of which we will
-> discontinue. We will also be discontinuing Hipchat Server and Hipchat Data Center."). No HipChat REST
-> API v2 endpoints remain reachable. This profile preserves the historical API surface for archival,
-> migration-pattern research, and adapter scaffolding.
+HipChat was Atlassian's team chat platform, providing persistent group chat, video, file sharing, and an extensive integration ecosystem. Atlassian discontinued HipChat Cloud, Stride, HipChat Server, and HipChat Data Center on February 15, 2019 after selling the IP to Slack in July 2018 and committing to a joint migration path for customers. This profile preserves the historical API surface (REST API v2, Webhooks, Connect add-on framework) for archival and migration-pattern research; no live endpoints remain.
 
-API and integration profile for HipChat, Atlassian's former team chat platform.
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/hipchat/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/hipchat/refs/heads/main/apis.yml)
 
-## Lifecycle
+## Tags
 
-| Field | Value |
-| --- | --- |
-| Score label | `SUNSET` |
-| Lifecycle | `discontinued` |
-| End-of-sale | 2018-07-26 (Slack acquisition announcement) |
-| End-of-life | **2019-02-15** |
-| Replacement | [Slack](https://slack.com) (joint migration path) |
-| Migration page | https://www.atlassian.com/migration/move-from-hipchat-to-slack |
-| Original API reference | `https://www.hipchat.com/docs/apiv2` (offline; use archive.org snapshots) |
-| Atlassian developer docs (mirror) | https://developer.atlassian.com/server/hipchat/ |
+- Chat
+- Messaging
+- Collaboration
+- Team Communication
+- Sunset
+- Historical
+- Atlassian
+- Webhooks
 
-## APIs documented
+## Timestamps
 
-| API | Surface | Base URL (historical) | Spec |
-| --- | --- | --- | --- |
-| HipChat REST API v2 | REST | `https://api.hipchat.com/v2` | [`openapi/hipchat-rest-api-openapi.yml`](openapi/hipchat-rest-api-openapi.yml) |
-| HipChat Webhooks API | Event delivery (JWT-signed) | `https://api.hipchat.com/v2/room/{id_or_name}/webhook` | [`asyncapi/hipchat-webhooks-asyncapi.yml`](asyncapi/hipchat-webhooks-asyncapi.yml) |
+- **Created:** Sun Dec 31 2023 19:00:00 GMT-0500 (Eastern Standard Time)
+- **Modified:** 2026-05-23
 
-### Authentication (historical)
+## APIs
 
-Four token types, passed via `Authorization: Bearer {token}` or `?auth_token={token}`:
+### HipChat REST API v2
 
-- Add-on token (issued via `POST /oauth/token`)
-- User token
-- Personal access token
-- Room notification token
+The HipChat REST API v2 was the primary developer surface for the team chat platform, exposing rooms, users, messages, notifications, emoticons, OAuth sessions, add-on capabilities, and webhook management. Authentication supported four token types (add-on tokens, user tokens, personal access tokens, and room notification tokens) passed as either an auth_token query parameter or an Authorization Bearer header. The API was retired on February 15, 2019 alongside the rest of the HipChat product line.
 
-### OAuth scopes
+- **Human URL:** [https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/](https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/)
 
-`admin_group`, `admin_room`, `manage_rooms`, `send_message`, `send_notification`, `view_group`,
-`view_messages`, `view_room`.
+#### Tags
 
-### Rate limits
+- Chat
+- Rooms
+- Messages
+- Users
+- Notifications
+- Webhooks
+- OAuth
+- Sunset
 
-- **500 requests / 5 minutes** overall (`X-Ratelimit-*` headers).
-- **30 messages / minute / room** flood control on notification and message-send endpoints
-  (`X-FloodControl-*` headers).
+#### Properties
 
-## Artifacts in this repo
+- [Documentation](https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/)
+- [API Reference](https://www.hipchat.com/docs/apiv2)
+- [OpenAPI](openapi/hipchat-rest-api-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Authentication](https://developer.atlassian.com/server/hipchat/auth/)
+- [Rate Limits](https://developer.atlassian.com/server/hipchat/hipchat-rest-api-rate-limits/)
+- [Rate Limits](rate-limits/hipchat-rate-limits.yml)
+- [Security](https://developer.atlassian.com/server/hipchat/hipchat-rest-api-scopes/)
+- [Getting Started](https://developer.atlassian.com/server/hipchat/getting-started-with-atlassian-connect-for-hipchat/)
+- [SDK](https://github.com/hipchat/hipchat-php)
+- [SDK](https://github.com/hipchat/hipchat-rb)
+- [SDK](https://github.com/hipchat/hubot-hipchat)
+- [C L I](https://github.com/hipchat/hipchat-cli)
+- [Integrations](https://github.com/hipchat/redmine_hipchat)
+- [Integrations](https://github.com/hipchat/triatomic)
+- [GitHub Organization](https://github.com/hipchat)
+- [JSON Schema](json-schema/hipchat-room-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](json-schema/hipchat-user-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](json-schema/hipchat-message-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](json-schema/hipchat-webhook-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON-LD](json-ld/hipchat-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
+- [Versioning](https://developer.atlassian.com/server/hipchat/hipchat-connect-versioning/)
+- [Sunset](https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership)
+- [Sunset](https://www.atlassian.com/migration/move-from-hipchat-to-slack)
 
-| Folder | Files |
-| --- | --- |
-| `openapi/` | `hipchat-rest-api-openapi.yml` |
-| `asyncapi/` | `hipchat-webhooks-asyncapi.yml` |
-| `json-schema/` | `hipchat-room-schema.json`, `hipchat-user-schema.json`, `hipchat-message-schema.json`, `hipchat-webhook-schema.json` |
-| `json-structure/` | `hipchat-room-structure.json`, `hipchat-message-structure.json` |
-| `json-ld/` | `hipchat-context.jsonld` |
-| `examples/` | `hipchat-room-example.json`, `hipchat-user-example.json`, `hipchat-send-notification-example.json`, `hipchat-room-message-webhook-example.json` |
-| `rules/` | `hipchat-rest-api-rules.yml` (Spectral) |
-| `capabilities/` | `hipchat-rooms.yaml`, `hipchat-users.yaml`, `hipchat-messages.yaml`, `hipchat-webhooks.yaml`, `hipchat-emoticons.yaml` |
-| `vocabulary/` | `hipchat-vocabulary.yml` |
-| `plans/` | `hipchat-plans-pricing.yml` (historical pricing) |
-| `rate-limits/` | `hipchat-rate-limits.yml` |
-| `finops/` | `hipchat-finops.yml` |
+### HipChat Webhooks API
 
-## Historical SDK and tooling ecosystem (github.com/hipchat)
+Event-driven webhook delivery from HipChat rooms. Webhooks could be registered via the REST API or declared in an add-on descriptor. Each delivery included a JWT-signed signed_request query parameter that the receiving service was expected to verify. The room_message event was the primary integration pattern, with additional events covering room enter, exit, topic change, archive, notification, and file upload. The webhook surface was retired with the rest of HipChat on February 15, 2019.
 
-| Repo | Language | Purpose | Stars |
-| --- | --- | --- | --- |
-| [`hubot-hipchat`](https://github.com/hipchat/hubot-hipchat) | CoffeeScript | Hubot chat-bot adapter | 661 |
-| [`hipchat-cli`](https://github.com/hipchat/hipchat-cli) | Shell | CLI scripts for the REST API | 341 |
-| [`hipchat-rb`](https://github.com/hipchat/hipchat-rb) | Ruby | REST wrapper with Capistrano hooks | 334 |
-| [`hipchat-php`](https://github.com/hipchat/hipchat-php) | PHP | REST wrapper | 167 |
-| [`redmine_hipchat`](https://github.com/hipchat/redmine_hipchat) | Ruby | Redmine notification plugin | 64 |
-| [`curler`](https://github.com/hipchat/curler) | Python | Gearman worker that cURLs | 51 |
-| [`triatomic`](https://github.com/hipchat/triatomic) | CoffeeScript | Starter Hubot config for Heroku | 29 |
+- **Human URL:** [https://developer.atlassian.com/server/hipchat/webhooks/](https://developer.atlassian.com/server/hipchat/webhooks/)
 
-Plus forks/infrastructure: `strophejs`, `punjab`, `SleekXMPP`/`slixmpp`, `phpredis`, `honcho`,
-`oauthd`, `linkify`, `Caja-HTML-Sanitizer`, `python-client` (LaunchDarkly), `php-client` (LaunchDarkly),
-`ZipArchive`, `three20`, `InAppSettingsKit`, `asap-authentication-python`, `pusher`, `mixpanel_proxy`,
-`x2js`, `alchimia`, and the `sleuthman` Pac-Man clone.
+#### Tags
 
-## Why this profile exists
+- Webhooks
+- Events
+- Chat
+- Sunset
 
-HipChat is a worked example of a complete platform sunset: a four-product line, a healthy add-on
-marketplace (HipChat Connect), and a robust XMPP/REST/webhook stack, all decommissioned together.
-The artifacts here serve three purposes:
+#### Properties
 
-1. **Migration-pattern reference** — for teams documenting their own chat-platform sunsets.
-2. **Adapter scaffolding** — Naftiko capabilities and OpenAPI specs that downstream tools can
-   re-target at modern equivalents (Slack, Microsoft Teams, Mattermost).
-3. **Historical record** — a single canonical map of the HipChat API surface as it existed, even
-   after the developer.atlassian.com pages start to bit-rot.
+- [Documentation](https://developer.atlassian.com/server/hipchat/webhooks/)
+- [AsyncAPI](asyncapi/hipchat-webhooks-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
+- [Authentication](https://developer.atlassian.com/server/hipchat/understanding-jwt-for-apps/)
+- [JSON Schema](json-schema/hipchat-webhook-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [Sunset](https://www.atlassian.com/migration/move-from-hipchat-to-slack)
 
-## Source verification
+## Common Properties
 
-Every claim in `apis.yml` and the artifacts here traces to one of:
+- [Documentation](https://developer.atlassian.com/server/hipchat/)
+- [Developer Portal](https://developer.atlassian.com/server/hipchat/)
+- [GitHub Organization](https://github.com/hipchat)
+- [Blog](https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership)
+- [Sunset](https://www.atlassian.com/migration/move-from-hipchat-to-slack)
+- [Integrations](https://www.atlassian.com/partnerships/slack)
+- [Pricing](plans/hipchat-plans-pricing.yml)
+- [Rate Limits](rate-limits/hipchat-rate-limits.yml)
+- [Fin Ops](finops/hipchat-finops.yml)
 
-- `https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership` (sunset announcement, July 26 2018)
-- `https://www.atlassian.com/migration/move-from-hipchat-to-slack` (official migration page)
-- `https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/` (auth, base URL, token types)
-- `https://developer.atlassian.com/server/hipchat/hipchat-rest-api-scopes/` (8 OAuth scopes)
-- `https://developer.atlassian.com/server/hipchat/hipchat-rest-api-rate-limits/` (500/5min + 30/min flood control)
-- `https://developer.atlassian.com/server/hipchat/webhooks/` (signed_request JWT)
-- `https://en.wikipedia.org/wiki/HipChat` (founding 2009, Atlassian acquisition 2012-03-07, sunset 2019-02-15)
-- `gh api orgs/hipchat/repos` (live GitHub org enumeration as of 2026-05-23)
+## Maintainers
+
+**FN:** API Evangelist
+**Email:** info@apievangelist.com
+**URL:** https://apievangelist.com
