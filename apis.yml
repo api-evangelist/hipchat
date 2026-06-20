@@ -7,7 +7,7 @@ description: >-
   February 15, 2019 after selling the IP to Slack in July 2018 and committing to a joint migration path for customers.
   This profile preserves the historical API surface (REST API v2, Webhooks, Connect add-on framework) for archival and
   migration-pattern research; no live endpoints remain.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 created: 2024-01-01T00:00:00.000Z
 modified: '2026-05-23'
 specificationVersion: '0.19'
@@ -30,7 +30,7 @@ apis:
       supported four token types (add-on tokens, user tokens, personal access tokens, and room notification tokens)
       passed as either an auth_token query parameter or an Authorization Bearer header. The API was retired on February
       15, 2019 alongside the rest of the HipChat product line.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseUrl: https://api.hipchat.com/v2
     humanURL: https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/
     tags:
@@ -110,7 +110,7 @@ apis:
       was expected to verify. The room_message event was the primary integration pattern, with additional events
       covering room enter, exit, topic change, archive, notification, and file upload. The webhook surface was retired
       with the rest of HipChat on February 15, 2019.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseUrl: https://api.hipchat.com/v2/room/{id_or_name}/webhook
     humanURL: https://developer.atlassian.com/server/hipchat/webhooks/
     tags:
