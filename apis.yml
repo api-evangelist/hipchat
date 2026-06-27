@@ -61,13 +61,13 @@ apis:
         title: OAuth Scopes
       - type: GettingStarted
         url: https://developer.atlassian.com/server/hipchat/getting-started-with-atlassian-connect-for-hipchat/
-      - type: SDK
+      - type: SDKs
         url: https://github.com/hipchat/hipchat-php
         title: hipchat-php — Official PHP wrapper
-      - type: SDK
+      - type: SDKs
         url: https://github.com/hipchat/hipchat-rb
         title: hipchat-rb — Official Ruby wrapper with Capistrano hooks
-      - type: SDK
+      - type: SDKs
         url: https://github.com/hipchat/hubot-hipchat
         title: hubot-hipchat — HipChat adapter for GitHub's Hubot
       - type: CLI

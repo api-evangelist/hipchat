@@ -2,11 +2,11 @@
   "repo": "hipchat",
   "feeds": [
     {
-      "source": "https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership",
+      "source": "https://www.atlassian.com/blog/comments/feed",
       "feed_url": "https://www.atlassian.com/blog/comments/feed",
       "title": "",
       "saved": 3,
-      "method": "discovered"
+      "method": "feed"
     },
     {
       "source": "https://github.com/hipchat",
@@ -16,6 +16,6 @@
       "method": "none"
     }
   ],
-  "post_count": 3,
-  "fetched": "2026-06-14T20:42:17Z"
+  "post_count": 9,
+  "fetched": "2026-06-27T12:03:07Z"
 }
