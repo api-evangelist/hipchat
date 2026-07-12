@@ -13,6 +13,8 @@ modified: '2026-05-23'
 specificationVersion: '0.19'
 scoreLabel: SUNSET
 lifecycle: discontinued
+deprecated: true
+deprecatedReason: "HipChat has been discontinued. Retained for historical reference."
 tags:
   - Chat
   - Messaging
@@ -131,6 +133,12 @@ apis:
       - type: Sunset
         url: https://www.atlassian.com/migration/move-from-hipchat-to-slack
 common:
+  - type: TrustCenter
+    url: security/hipchat-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/hipchat-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/hipchat-domain-security.yml
   - type: Documentation
     url: https://developer.atlassian.com/server/hipchat/
   - type: DeveloperPortal
