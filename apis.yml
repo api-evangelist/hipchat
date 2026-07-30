@@ -7,7 +7,19 @@ description: >-
   February 15, 2019 after selling the IP to Slack in July 2018 and committing to a joint migration path for customers.
   This profile preserves the historical API surface (REST API v2, Webhooks, Connect add-on framework) for archival and
   migration-pattern research; no live endpoints remain.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Paid
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hipchat.png
 created: 2024-01-01T00:00:00.000Z
 modified: '2026-05-23'
 specificationVersion: '0.19'
