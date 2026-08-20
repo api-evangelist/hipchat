@@ -35,6 +35,15 @@ tags:
   - Sunset
   - Historical
   - Atlassian
+  - Webhook
+tags_raw:
+  - Chat
+  - Messaging
+  - Collaboration
+  - Team Communication
+  - Sunset
+  - Historical
+  - Atlassian
   - Webhooks
 apis:
   - name: HipChat REST API v2
@@ -48,6 +57,15 @@ apis:
     baseUrl: https://api.hipchat.com/v2
     humanURL: https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/
     tags:
+      - Chat
+      - Rooms
+      - Message
+      - User
+      - Notification
+      - Webhook
+      - Authentication
+      - Sunset
+    tags_raw:
       - Chat
       - Rooms
       - Messages
@@ -128,6 +146,11 @@ apis:
     baseUrl: https://api.hipchat.com/v2/room/{id_or_name}/webhook
     humanURL: https://developer.atlassian.com/server/hipchat/webhooks/
     tags:
+      - Webhook
+      - Event
+      - Chat
+      - Sunset
+    tags_raw:
       - Webhooks
       - Events
       - Chat
