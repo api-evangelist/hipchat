@@ -7,6 +7,18 @@ description: >-
   February 15, 2019 after selling the IP to Slack in July 2018 and committing to a joint migration path for customers.
   This profile preserves the historical API surface (REST API v2, Webhooks, Connect add-on framework) for archival and
   migration-pattern research; no live endpoints remain.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: unknown
