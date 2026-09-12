@@ -180,6 +180,8 @@ apis:
       - type: Sunset
         url: https://www.atlassian.com/migration/move-from-hipchat-to-slack
 common:
+  - type: Website
+    url: https://www.atlassian.com/
   - type: TrustCenter
     url: security/hipchat-trust-center.yml
   - type: VulnerabilityDisclosure
@@ -213,3 +215,5 @@ maintainers:
   - FN: API Evangelist
     email: info@apievangelist.com
     url: https://apievangelist.com
+x-parent: atlassian
+x-relationship: product
