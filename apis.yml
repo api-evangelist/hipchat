@@ -48,6 +48,7 @@ tags:
   - Historical
   - Atlassian
   - Webhook
+  - Defunct
 tags_raw:
   - Chat
   - Messaging
@@ -57,6 +58,7 @@ tags_raw:
   - Historical
   - Atlassian
   - Webhooks
+  - Defunct
 apis:
   - name: HipChat REST API v2
     description: >-
@@ -77,6 +79,7 @@ apis:
       - Webhook
       - Authentication
       - Sunset
+      - Discontinued
     tags_raw:
       - Chat
       - Rooms
@@ -86,6 +89,7 @@ apis:
       - Webhooks
       - OAuth
       - Sunset
+      - Discontinued
     properties:
       - type: Documentation
         url: https://developer.atlassian.com/server/hipchat/about-the-hipchat-rest-api/
@@ -162,11 +166,13 @@ apis:
       - Event
       - Chat
       - Sunset
+      - Discontinued
     tags_raw:
       - Webhooks
       - Events
       - Chat
       - Sunset
+      - Discontinued
     properties:
       - type: Documentation
         url: https://developer.atlassian.com/server/hipchat/webhooks/
@@ -217,3 +223,4 @@ maintainers:
     url: https://apievangelist.com
 x-parent: atlassian
 x-relationship: product
+x-status: defunct
