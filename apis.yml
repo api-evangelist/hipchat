@@ -186,6 +186,8 @@ apis:
       - type: Sunset
         url: https://www.atlassian.com/migration/move-from-hipchat-to-slack
 common:
+  - type: Plans
+    url: plans/hipchat-plans-pricing.yml
   - type: Website
     url: https://www.atlassian.com/
   - type: TrustCenter
